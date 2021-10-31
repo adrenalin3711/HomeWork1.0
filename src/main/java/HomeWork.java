@@ -5,13 +5,13 @@ public class HomeWork {
     public static void main(String[] args) {
         int[] arr1 = {1, 2, 3, 5, 6, 8, 768, 3, 452, 35, 8, 0};
         int[] arr2 = {1,2,3,4,9,4,3,2,10};
-//        reversArray();
-//        numbersArray();
-//        arrayFunction();
-//        arraySquare();
-//        arrayArguments(6,7);
-//        arrayMinMax(arr1);
-//        System.out.println(arrayRightSumLeftSum(arr2));
+        reversArray();
+        numbersArray();
+        arrayFunction();
+        arraySquare();
+        arrayArguments(6,7);
+        arrayMinMax(arr1);
+        System.out.println(arrayRightSumLeftSum(arr2));
             arrayFunction();
 
     }
