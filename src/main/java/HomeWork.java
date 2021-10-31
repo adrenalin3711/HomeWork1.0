@@ -1,5 +1,4 @@
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class HomeWork {
     public static void main(String[] args) {
@@ -12,7 +11,6 @@ public class HomeWork {
         arrayArguments(6,7);
         arrayMinMax(arr1);
         System.out.println(arrayRightSumLeftSum(arr2));
-            arrayFunction();
 
     }
 
