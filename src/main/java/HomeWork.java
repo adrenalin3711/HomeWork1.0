@@ -1,102 +1,248 @@
 import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
 
 public class HomeWork {
-    public static void main(String[] args) {
-        int[] arr1 = {1, 2, 3, 5, 6, 8, 768, 3, 452, 35, 8, 0};
-        int[] arr2 = {1,2,3,4,9,4,3,2,10};
-        reversArray();
-        numbersArray();
-        arrayFunction();
-        arraySquare();
-        arrayArguments(6,7);
-        arrayMinMax(arr1);
-        System.out.println(arrayRightSumLeftSum(arr2));
+        final int size = 3;
+        char[][] map = new char[size][size];
+        final char cNull = '•', player = 'x', cpu1 = 'o';
+        Scanner sc = new Scanner(System.in);
+        Random r = new Random();
 
-    }
+        public static void main(String[] args) {
+            HomeWork g = new HomeWork();
+            g.newMap();
+            g.printMap();
 
-    public static void reversArray() {
-        int[] arr = {1, 1, 0, 0, 1, 0};
-        System.out.println(Arrays.toString(arr) + " ");
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] == 0) {
-                arr[i]++;
-            } else if (arr[i] == 1) {
-                arr[i]--;
-            }
-        }
-        System.out.println(Arrays.toString(arr) + " ");
-    }
-
-    public static void numbersArray() {
-        int[] arr = new int[100];
-        System.out.println(Arrays.toString(arr));
-        for (int i = 0; i < arr.length; i++) {
-            arr[i] = i + 1;
-        }
-        System.out.println(Arrays.toString(arr));
-    }
-
-    public static void arrayFunction() {
-        int[] arr = {1, 5, 3, 2, 11, 4, 5, 2, 4, 8, 9, 1};
-        System.out.println(Arrays.toString(arr));
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] < 6) {
-                arr[i] *= 2;
-            }
-        }
-        System.out.println(Arrays.toString(arr));
-    }
-
-    public static void arraySquare() {
-        int[][] arr = new int[6][6];
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = 0; j < arr.length; j++) {
-                if (arr[i] == arr[j]) {
-                    arr[i][j]++;
+            while (true) {
+                g.playerTurn();
+                g.printMap();
+                if (g.checkWin(g.player)) {
+                    System.out.println("CONGRATULATIONS! YOU ARE THE WINNER");
+                    break;
                 }
-                System.out.print(arr[i][j] + " ");
+                if (g.isMapFull()) {
+                    System.out.println("GAME OVER. NOBODY'S WIN");
+                    break;
+                }
+
+                g.aiTurn(g.cpu1);
+                g.printMap();
+                if (g.checkWin(g.cpu1)) {
+                    System.out.println("GAME OVER. CPU1 IS THE WINNER");
+                    break;
+                }
+                if (g.isMapFull()) {
+                    System.out.println("GAME OVER. NOBODY'S WIN");
+                    break;
+                }
             }
+        }
+        void newMap() {
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    map[i][j] = cNull;
+                }
+            }
+        }
+        void printMap() {
+            for (int i = 0; i < size + 1; i++) {
+                System.out.print(" " + i + " ");
+            }
+            System.out.print(" X ");
             System.out.println();
+            for (int i = 0; i < size; i++) {
+                System.out.print(" " + (i + 1) + "  ");
+                for (int j = 0; j < size; j++) {
+                    System.out.print(map[i][j] + "  ");
+                }
+                System.out.println(i + 1);
+            }
+            System.out.print(" Y ");
+            for (int i = 1; i <= size; i++) System.out.print(i + "  ");
+            System.out.println("O\n");
         }
-    }
 
-    public static void arrayArguments(int len, int intialValue) {
-        int[] arr = new int[len];
-        for (int i = 0; i < arr.length; i++) {
-            arr[i] = intialValue;
+        void playerTurn() {
+            int x, y;
+            do {
+                System.out.println("YOUR TURN. Enter coordinates Y and X");
+                x = sc.nextInt() - 1;
+                y = sc.nextInt() - 1;
+            } while (!isCellValid(x, y));
+            map[y][x] = player;
         }
-        System.out.println(Arrays.toString(arr));
-    }
+        boolean isCellValid(int x, int y) {
+            if (x < 0 || y < 0 || x >= size || y >= size) return false;
+            if (map[y][x] == cNull) return true;
+            return false;
+        }
+        boolean checkWin(char c) {
+            int countV;
+            int countH;
+            int countDiagonalA = 0;
+            int countDiagonalB = 0;
+            for (int i = 0; i <= size - 1; i++) {
+                countH = 0;
+                countV = 0;
+                for (int j = 0; j <= size - 1; j++) {
+                    //проверка горизонтали
+                    if (map[i][j] == c) {
+                        countH++;
+                        if (countH == size) return true;
+                    }
+                    //проверка вертикали
+                    if (map[j][i] == c) {
+                        countV++;
+                        if (countV == size) return true;
+                    }
+                }
+                // проверка диагонали A \
+                if (map[i][i] == c) {
+                    countDiagonalA++;
+                    if (countDiagonalA == size) return true;
+                } else countDiagonalA = 0;
+                // проверка диагонали B /
+                if (map[i][size - 1 - i] == c) {
+                    countDiagonalB++;
+                    if (countDiagonalB == size) return true;
+                } else countDiagonalB = 0;
+            }
+            return false;
+        }
 
-    public static void arrayMinMax(int[] arr) {
-        int max = arr[0];
-        int min = arr[0];
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] > max) {
-                max = arr[i];
+        boolean isMapFull() {
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    if (map[i][j] == cNull) return false;
+                }
+            }
+            return true;
+        }
+
+        void aiTurn(char c) {
+            int x = 0, y = 0, countH = 0, countHNull = 0, countV = 0, countVNull = 0, countDiagonalA = 0, countDiagonalB = 0, countDANull = 0, countDBNull = 0;
+            System.out.println("CPU TURN WITH [" + c + "]:");
+            for (int i = 0; i < size; i++) {
+                countH = 0;
+                countHNull = 0;
+                countV = 0;
+                countVNull = 0;
+                for (int j = 0; j < size; j++) { // ход по вертикали
+                    if (map[j][i] == c) countV++;
+                    else if (map[j][i] == cNull) countVNull++;
+                    if ((countV == size - 1) && (countVNull == 1)) {
+                        for (int k = 0; k < size; k++) {
+                            if (map[k][i] == cNull) {
+                                map[k][i] = c;
+                                return;
+                            }
+                        }
+                    }
+                    if (map[i][j] == c) countH++; // ход по горизонтали
+                    else if (map[i][j] == cNull) countHNull++;
+                    if ((countH == size - 1) && (countHNull == 1)) {
+                        for (int k = 0; k < size; k++) {
+                            if (map[i][k] == cNull) {
+                                map[i][k] = c;
+                                return;
+                            }
+                        }
+                    }
+
+                }
+                if (map[i][i] == c) countDiagonalA++; // ход по диагонали \
+                else if (map[i][i] == cNull) countDANull++;
+                if ((countDiagonalA == size - 1) && (countDANull == 1)) {
+                    for (int j = 0; j < size; j++) {
+                        if (map[j][j] == cNull) {
+                            map[j][j] = c;
+                            return;
+                        }
+                    }
+                }
+                if (map[i][size - 1 - i] == c) countDiagonalB++; // ход по диагонали /
+                else if (map[i][size - 1 - i] == cNull) countDBNull++;
+                if ((countDiagonalB == size - 1) && (countDBNull == 1)) {
+                    for (int j = 0; j < size; j++) {
+                        if (map[j][size - 1 - j] == cNull) {
+                            map[j][size - 1 - j] = c;
+                            return;
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < size; i++) { // блокировние игрока
+                countH = 0;
+                countHNull = 0;
+                countV = 0;
+                countVNull = 0;
+                for (int j = 0; j < size; j++) { //ходы по вертикали
+                    if (map[j][i] == player) countV++;
+                    else if (map[j][i] == cNull) countVNull++;
+                    if ((countV == size - 1) && (countVNull == 1)) {
+                        for (int k = 0; k < size; k++) {
+                            if (map[k][i] == cNull) {
+                                map[k][i] = c;
+                                return;
+                            }
+                        }
+                    }
+                    if (map[i][j] == player) countH++;  //ходы по горизонтали
+                    else if (map[i][j] == cNull) countHNull++;
+                    if ((countH == size - 1) && (countHNull == 1)) {
+                        for (int k = 0; k < size; k++) {
+                            if (map[i][k] == cNull) {
+                                map[i][k] = c;
+                                return;
+                            }
+                        }
+                    }
+
+                }
+                if (map[i][i] == player) countDiagonalA++; //  ход по диагонали A \
+                else if (map[i][i] == cNull) countDANull++;
+                if ((countDiagonalA == size - 1) && (countDANull == 1)) {
+                    for (int j = 0; j < size; j++) {
+                        if (map[j][j] == cNull) {
+                            map[j][j] = c;
+                            return;
+                        }
+                    }
+                }
+                if (map[i][size - 1 - i] == player) countDiagonalB++; // ход по диагонали B /
+                else if (map[i][size - 1 - i] == cNull) countDBNull++;
+                if ((countDiagonalB == size - 1) && (countDBNull == 1)) {
+                    for (int j = 0; j < size; j++) {
+                        if (map[j][size - 1 - j] == cNull) {
+                            map[j][size - 1 - j] = c;
+                            return;
+                        }
+                    }
+                }
+            }
+            if (!(size % 2 == 0)) {
+                int center = (((size + 1) / 2) - 1);
+                if (map[center][center] == cNull) {
+                    map[center][center] = c;
+                    return;
+                }
+            }
+            if (map[0][0] == cNull) { // ходы аи по диагонали
+                map[0][0] = c;
+                return;
+            }
+            if (map[0][map.length - 1] == cNull) {
+                map[0][map.length - 1] = c;
+                return;
+            }
+            if (map[map.length - 1][0] == cNull) {
+                map[map.length - 1][0] = c;
+                return;
+            }
+            if (map[map.length - 1][map.length - 1] == cNull) {
+                map[map.length - 1][map.length - 1] = c;
+                return;
             }
         }
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] < min) {
-                min = arr[i];
-            }
-        }
-        System.out.println(max);
-        System.out.println(min);
     }
-
-    public static boolean arrayRightSumLeftSum( int[] arr){
-        int rightSum = 0;
-        int leftSum = 0;
-        for (int i = 0; i < arr.length; i++) {
-            rightSum += arr[i];
-        }
-        for (int i = 0; i < arr.length; i++) {
-            leftSum += arr[i];
-            if (leftSum == rightSum - leftSum) {
-                return true;
-            }
-        }
-        return false;
-    }
-}
